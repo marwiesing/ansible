@@ -70,3 +70,4 @@ ansible all -i inventory.ini -m ping
 ansible all -i "ubuntu1,ubuntu2,ubuntu3,centos1,centos2,centos3," -m ping
 ssh centos3
 ssh centos2
+ls -a
