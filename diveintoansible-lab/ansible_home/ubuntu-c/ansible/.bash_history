@@ -71,3 +71,8 @@ ansible all -i "ubuntu1,ubuntu2,ubuntu3,centos1,centos2,centos3," -m ping
 ssh centos3
 ssh centos2
 ls -a
+ansible --version
+su -
+ansible --version
+touch .ansible.cfg
+ansible --version
