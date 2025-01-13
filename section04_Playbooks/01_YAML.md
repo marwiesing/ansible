@@ -4,8 +4,8 @@
 
 Welcome to this section on Ansible Playbooks! In this module, we’ll delve into:
 
-1. **Understanding YAML**: The language of playbooks and how to use it effectively.
-2. **Ansible Playbooks**: An overview of the sections that typically make up a playbook.
+1. **Understanding YAML**:![yaml](image.png) The language of playbooks and how to use it effectively.
+2. **Ansible Playbooks**:![playbook](image-1.png) An overview of the sections that typically make up a playbook.
 3. **Working with Variables**: The various ways to use variables in Ansible.
 4. **Facts and Custom Facts**: How to use the setup module for facts and create custom ones.
 5. **Templating with Jinja2**: Using Jinja2 to make playbooks dynamic and reusable.
