@@ -6,3 +6,12 @@
 
 # Optional: Ignore backup or temporary files related to .env
 .env.*
+
+# Ignore log files and other temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+
+# Ignore ansible_home
+diveintoansible-lab/ansible_home/
