@@ -13,5 +13,5 @@
 *.temp
 *.swp
 
-# Ignore ansible_home
+# Ignore ansible_lab
 diveintoansible-lab/
