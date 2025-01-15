@@ -14,4 +14,4 @@
 *.swp
 
 # Ignore ansible_home
-diveintoansible-lab/ansible_home/
+diveintoansible-lab/
