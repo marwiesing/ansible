@@ -41,7 +41,78 @@ Here’s an annotated skeleton of a playbook:
         name: my_service
         state: restarted
 ```
+```bash
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/Ansible Playbooks, Breakdown of Sections/02$ cat motd_playbook.yaml 
+```
+```yaml
+---
+# YAML documents begin with the document separator ---
 
+# The minus in YAML this indicates a list item.  The playbook contains a list 
+# of plays, with each play being a dictionary
+-
+ 
+  # Hosts: where our play will run and options it will run with
+  hosts: centos
+  user: root
+
+  # Vars: variables that will apply to the play, on all target systems
+
+  # Tasks: the list of tasks that will be executed within the playbook
+  tasks:
+    - name: Configure a MOTD (message of the day)
+      copy:
+        src: centos_motd
+        dest: /etc/motd
+
+  # Handlers: the list of handlers that are executed as a notify key from a task
+
+  # Roles: list of roles to be imported into the play
+
+# Three dots indicate the end of a YAML document
+...
+```
+```bash
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/Ansible Playbooks, Breakdown of Sections/02$ ansible-playbook motd_playbook.yaml 
+
+PLAY [centos] ***********************************************************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************************************************************************************************
+ok: [centos1]
+ok: [centos3]
+ok: [centos2]
+
+TASK [Configure a MOTD (message of the day)] ****************************************************************************************************************************************************************************************************
+changed: [centos1]
+changed: [centos2]
+changed: [centos3]
+
+PLAY RECAP **************************************************************************************************************************************************************************************************************************************
+centos1                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+centos2                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+centos3                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/Ansible Playbooks, Breakdown of Sections/02$ ansible-playbook motd_playbook.yaml 
+
+PLAY [centos] ***********************************************************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************************************************************************************************
+ok: [centos1]
+ok: [centos2]
+ok: [centos3]
+
+TASK [Configure a MOTD (message of the day)] ****************************************************************************************************************************************************************************************************
+ok: [centos3]
+ok: [centos2]
+ok: [centos1]
+
+PLAY RECAP **************************************************************************************************************************************************************************************************************************************
+centos1                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+centos2                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+centos3                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
+![Options](image-3.png)
 ---
 
 ### Revision 01: Playbook Skeleton
@@ -215,12 +286,84 @@ tasks:
    ansible-playbook ubuntu_motd.yml
    ```
 
+5. **Solution**:
+    ```bash
+    ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/Ansible Playbooks, Breakdown of Sections/challenge$ cat motd_playbook.yaml 
+    ---
+    # YAML documents begin with the document separator ---
+
+    # The minus in YAML this indicates a list item.  The playbook contains a list 
+    # of plays, with each play being a dictionary
+    -
+
+      # Hosts: where our play will run and options it will run with
+      hosts: ubuntu
+      user: root
+
+      # Vars: variables that will apply to the play, on all target systems
+
+      # Tasks: the list of tasks that will be executed within the play, this section
+      #       can also be used for pre and post tasks
+      tasks:
+        - name: Create a Copy of 60-ansible-motd
+          copy:
+            src: 60-ansible-motd
+            dest: /etc/update-motd.d/60-ansible-motd
+            mode: preserve
+          notify: Debug, if there is a change
+
+      # Handlers: the list of handlers that are executed as a notify key from a task
+      handlers:
+        - name: Debug, if there is a change
+          debug:
+            msg: Change occurred
+
+      # Roles: list of roles to be imported into the play
+
+    # Three dots indicate the end of a YAML document
+    ...
+    ```
+    ```bash
+    ansible@ubuntu-c:~/diveintoansible/Ansible Playbooks, Introduction/Ansible Playbooks, Breakdown of Sections/challenge$ ansible-playbook motd_playbook.yaml 
+
+    PLAY [ubuntu] ***********************************************************************************************************************************************************************************************************************************
+
+    TASK [Gathering Facts] **************************************************************************************************************************************************************************************************************************
+    ok: [ubuntu3]
+    ok: [ubuntu1]
+    ok: [ubuntu2]
+
+    TASK [Create a Copy of 60-ansible-motd] *********************************************************************************************************************************************************************************************************
+    changed: [ubuntu2]
+    changed: [ubuntu1]
+    changed: [ubuntu3]
+
+    RUNNING HANDLER [Debug, if there is a change] ***************************************************************************************************************************************************************************************************
+    ok: [ubuntu1] => {
+        "msg": "Change occurred"
+    }
+    ok: [ubuntu2] => {
+        "msg": "Change occurred"
+    }
+    ok: [ubuntu3] => {
+        "msg": "Change occurred"
+    }
+
+    PLAY RECAP **************************************************************************************************************************************************************************************************************************************
+    ubuntu1                    : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+    ubuntu2                    : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+    ubuntu3                    : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+    ```
 ---
 
 ### Cleanup
 To remove the file:
 ```bash
-ansible -m file -a "path=/etc/update-motd.d/60-ansible-motd state=absent" ubuntu
+$ ansible ubuntu -m file -a 'path=/etc/update-motd.d/60-ansible-motd state=absent' -o
+ubuntu3 | CHANGED => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3.10"},"changed": true,"path": "/etc/update-motd.d/60-ansible-motd","state": "absent"}
+ubuntu2 | CHANGED => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3.10"},"changed": true,"path": "/etc/update-motd.d/60-ansible-motd","state": "absent"}
+ubuntu1 | CHANGED => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3.10"},"changed": true,"path": "/etc/update-motd.d/60-ansible-motd","state": "absent"}
 ```
 
 ---
