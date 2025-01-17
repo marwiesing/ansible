@@ -1,5 +1,5 @@
-#### **Introduction**
-Welcome to this section on optimizing Ansible performance. This module will focus on methods to enhance playbook efficiency and execution through various features in Ansible. We'll analyze performance bottlenecks, asynchronous operations, serial execution, and advanced strategies such as the "free" strategy for task execution. By addressing inefficiencies, you'll gain a comprehensive understanding of how to leverage Ansible's capabilities to the fullest.
+#### **Introduction: Optimizing Ansible performance**
+This module will focus on methods to enhance playbook efficiency and execution through various features in Ansible. We'll analyze performance bottlenecks, asynchronous operations, serial execution, and advanced strategies such as the "free" strategy for task execution. By addressing inefficiencies, you'll gain a comprehensive understanding of how to leverage Ansible's capabilities to the fullest.
 
 Key topics covered include:
 - Playbook performance bottlenecks.
